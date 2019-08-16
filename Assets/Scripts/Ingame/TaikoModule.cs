@@ -6,6 +6,7 @@ public class TaikoModule : MonoBehaviour
 {
     
     public float velocity = 5.0f;
+    public float judgeDistance = Screen.width / 1280 * 5.0f;
 
 #region Refactored Later!!
     public List<Note> data;
@@ -18,17 +19,24 @@ public class TaikoModule : MonoBehaviour
 
     public GameObject note;
     public Transform SpawnPoint;
-    public Transform WaitPoint;
+    public RectTransform JudgePoint;
 
 
     void Start () {
-        this.note.SetActive(false);
         Init(data);
     }
 
     public void Init (List<Note> data) {
         this.data = data;
+        
         this.note.SetActive(false);
+        ExpandPool();
+
+
+        InputModule.onLeftMouseClicked += TryPass;
+        InputModule.onRightMouseClicked += TryReject;
+        
+
         Play();
     }
 
@@ -36,13 +44,18 @@ public class TaikoModule : MonoBehaviour
         StartCoroutine (OnPlay());
     }
 
-    private TaikoNote Spawn (Note data) {
+    private void ExpandPool () {
         if (this.waited.Count == 0) {
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 30; i++) {
                 GameObject obj = GameObject.Instantiate (this.note, this.gameObject.transform, false);
-                //todo: init spawned note
                 this.waited.Add (obj.gameObject);
             }
+        }
+    }
+
+    private TaikoNote Spawn (Note data) {
+        if (this.waited.Count == 0) {
+            ExpandPool ();
         }
 
         TaikoNote target = this.waited [0].GetComponent<TaikoNote>();
@@ -78,5 +91,46 @@ public class TaikoModule : MonoBehaviour
 
             yield return null;
         }
+    }
+
+
+
+
+    private void TryPass () {
+        TaikoNote target = GetNearest();
+        if (target == null) return;
+
+        if (Vector2.Distance(target.GetComponent<RectTransform>().localPosition, JudgePoint.localPosition) > judgeDistance) {
+            
+            Debug.LogError (" out of range :"+Vector2.Distance(target.GetComponent<RectTransform>().localPosition, JudgePoint.localPosition));
+             //todo : handle this case
+            return;
+        }
+
+        //todo : check this note to be passed
+
+
+
+    }
+
+    private void TryReject () {
+        //todo
+    }
+
+
+    private TaikoNote GetNearest () {
+        float distance = Mathf.Infinity;
+        Transform result = null;
+        foreach (Transform n in SpawnPoint) {
+            if (!n.gameObject.activeSelf) continue;
+            float d = Vector3.Distance(n.GetComponent<RectTransform>().localPosition, JudgePoint.localPosition);
+            if (distance > d) {
+                distance = d;
+                result = n;
+            }
+        }
+
+        if (result == null) return null;
+        else return result.GetComponent<TaikoNote>();
     }
 }
