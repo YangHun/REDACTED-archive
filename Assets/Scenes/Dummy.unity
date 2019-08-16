@@ -287,6 +287,16 @@ PrefabInstance:
       propertyPath: module
       value: 
       objectReference: {fileID: 1366638664}
+    - target: {fileID: 8475000938827826634, guid: ec8da917e6ba0c840bbede0357dcb384,
+        type: 3}
+      propertyPath: mapfile
+      value: 
+      objectReference: {fileID: 4900000, guid: 29b54580f4f35c34fbc756aec94a79cc, type: 3}
+    - target: {fileID: 877664484104401660, guid: ec8da917e6ba0c840bbede0357dcb384,
+        type: 3}
+      propertyPath: bgmClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: c61c17db28d3b9641ac84ebc65731be6, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec8da917e6ba0c840bbede0357dcb384, type: 3}
 --- !u!1001 &4562925744878904464
@@ -369,6 +379,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TaikoEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 1804056212326496905, guid: ca2043103acc3e04eaafc007d4fcae2d,
+        type: 3}
+      propertyPath: dummyText
+      value: 
+      objectReference: {fileID: 7865162870543554272}
     - target: {fileID: 6401351068814949470, guid: ca2043103acc3e04eaafc007d4fcae2d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -424,11 +439,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1804056212326496905, guid: ca2043103acc3e04eaafc007d4fcae2d,
-        type: 3}
-      propertyPath: dummyText
-      value: 
-      objectReference: {fileID: 7865162870543554272}
     - target: {fileID: 2908771841042688026, guid: ca2043103acc3e04eaafc007d4fcae2d,
         type: 3}
       propertyPath: m_textInfo.characterCount

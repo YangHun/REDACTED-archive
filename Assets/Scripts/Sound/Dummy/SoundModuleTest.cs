@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class SoundModuleTest : MonoBehaviour
 {
+    public TextAsset mapfile;
 
     public TaikoModule module;
 
@@ -19,7 +20,8 @@ public class SoundModuleTest : MonoBehaviour
             SoundModule.Instance.PlayBGM(0, ()=> {
                 text.text = "bgm\nOff";
             });
-            module.Init(null);
+            var channels = Parser.ParseString(mapfile.text);
+            module.Init(channels[0]);
             text.text = "bgm\nOn";
         }
         this.bgm = !this.bgm;

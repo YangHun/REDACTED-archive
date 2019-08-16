@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TaikoNote : MonoBehaviour
 {
+    public int timingHint;
     private Note data;
     private RectTransform rect;
 
@@ -12,6 +13,7 @@ public class TaikoNote : MonoBehaviour
     public void Init (Transform parent, Note data, System.Action onDespawn) {
         this.rect = GetComponent<RectTransform>();
         this.data = data;
+        this.timingHint = data.timing;
         this.onDespawn = onDespawn;
         this.transform.SetParent(parent);
         this.gameObject.SetActive(true);

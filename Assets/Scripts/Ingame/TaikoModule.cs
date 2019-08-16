@@ -13,9 +13,9 @@ public class TaikoModule : MonoBehaviour
     public float velocity = 5.0f;
     public float judgeDistance = 100;
 
-#region Refactored Later!!
+
+    [HideInInspector]
     public List<Note> data;
-#endregion
 
 
     private List <GameObject> waited = new List<GameObject>();
