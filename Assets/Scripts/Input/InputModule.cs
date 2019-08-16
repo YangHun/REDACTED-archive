@@ -12,7 +12,7 @@ public class InputModule : MonoBehaviour
     private Coroutine coroutine = null;
     void Awake() {
         DontDestroyOnLoad (this.gameObject);
-        if (EventSystem.current == null) this.gameObject.AddComponent<EventSystem>();
+        //if (EventSystem.current == null) this.gameObject.AddComponent<EventSystem>();
         this.coroutine = StartCoroutine (OnUpdate());
     }
 

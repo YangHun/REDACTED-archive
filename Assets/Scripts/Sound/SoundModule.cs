@@ -14,6 +14,11 @@ public class SoundModule : Singleton<SoundModule>
     private AudioSource bgm = null;
     private AudioSource sfx = null;
 
+    public AudioSource BGM {
+        get { return this.bgm; }
+        private set {}
+    }
+
     void Awake() {
         DontDestroyOnLoad(this.gameObject);
         Init();
