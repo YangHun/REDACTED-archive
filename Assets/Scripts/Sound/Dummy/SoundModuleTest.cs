@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class SoundModuleTest : MonoBehaviour
 {
+
+    public TaikoModule module;
+
     bool bgm = false;
     bool sfx = false;
     public void ToggleBGM (Text text) {
@@ -16,7 +19,7 @@ public class SoundModuleTest : MonoBehaviour
             SoundModule.Instance.PlayBGM(0, ()=> {
                 text.text = "bgm\nOff";
             });
-
+            module.Init(null);
             text.text = "bgm\nOn";
         }
         this.bgm = !this.bgm;

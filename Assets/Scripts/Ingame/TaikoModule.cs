@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TaikoModule : MonoBehaviour
 {
     
+
+    public Text dummyText;
+    private float min = Mathf.Infinity;
+
     public float velocity = 5.0f;
-    public float judgeDistance = Screen.width / 1280 * 5.0f;
+    public float judgeDistance = 100;
 
 #region Refactored Later!!
     public List<Note> data;
@@ -19,15 +24,10 @@ public class TaikoModule : MonoBehaviour
 
     public GameObject note;
     public Transform SpawnPoint;
-    public RectTransform JudgePoint;
-
-
-    void Start () {
-        Init(data);
-    }
+    public Transform JudgePoint;
 
     public void Init (List<Note> data) {
-        this.data = data;
+        if (data != null) this.data = data;
         
         this.note.SetActive(false);
         ExpandPool();
@@ -40,7 +40,8 @@ public class TaikoModule : MonoBehaviour
         Play();
     }
 
-    public void Play () {
+    private void Play () {
+        StopAllCoroutines();
         StartCoroutine (OnPlay());
     }
 
@@ -77,12 +78,10 @@ public class TaikoModule : MonoBehaviour
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
             float time = SoundModule.Instance.BGM.time;
-            Debug.Log ("playing?");
             if ( data.Count > 0 && (float) (data [0].timing) / 1000.0f < time ) {
                 TaikoNote note = Spawn(data[0]);
                 note.Init(SpawnPoint, data[0], ()=>{ Despawn (note.gameObject); });
                 data.RemoveAt(0);
-                Debug.Log ("Spawned at:" + time);
             } 
 
             foreach (Transform n in SpawnPoint) {
@@ -98,14 +97,27 @@ public class TaikoModule : MonoBehaviour
 
     private void TryPass () {
         TaikoNote target = GetNearest();
-        if (target == null) return;
+        if (target == null) {
+            Debug.Log ("null!!");
+            return;
+        }
 
-        if (Vector2.Distance(target.GetComponent<RectTransform>().localPosition, JudgePoint.localPosition) > judgeDistance) {
+        if (min > Vector3.Distance(target.transform.position, JudgePoint.position)) min = Vector3.Distance(target.transform.position, JudgePoint.position);
+        dummyText.text = string.Format ("distance:{0}\nMin dist:{1}",Vector3.Distance(target.transform.position, JudgePoint.position), min);
+
+        if (Vector3.Distance(target.transform.position, JudgePoint.position) > judgeDistance) {
             
-            Debug.LogError (" out of range :"+Vector2.Distance(target.GetComponent<RectTransform>().localPosition, JudgePoint.localPosition));
+            Debug.LogError (" so far from judge line! :"+ Vector3.Distance(target.transform.position, JudgePoint.position));
              //todo : handle this case
             return;
         }
+
+        else {
+            Debug.Log ("distance:"+ Vector3.Distance(target.transform.position, JudgePoint.position));
+        }
+
+
+        
 
         //todo : check this note to be passed
 
@@ -123,7 +135,7 @@ public class TaikoModule : MonoBehaviour
         Transform result = null;
         foreach (Transform n in SpawnPoint) {
             if (!n.gameObject.activeSelf) continue;
-            float d = Vector3.Distance(n.GetComponent<RectTransform>().localPosition, JudgePoint.localPosition);
+            float d = Vector3.Distance(n.position, JudgePoint.position);
             if (distance > d) {
                 distance = d;
                 result = n;
