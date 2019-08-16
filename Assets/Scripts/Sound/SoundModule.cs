@@ -14,6 +14,10 @@ public class SoundModule : Singleton<SoundModule>
     private AudioSource bgm = null;
     private AudioSource sfx = null;
 
+    public float GetTiming {
+        get { return bgm.time; }
+    }
+
     public AudioSource BGM {
         get { return this.bgm; }
         private set {}

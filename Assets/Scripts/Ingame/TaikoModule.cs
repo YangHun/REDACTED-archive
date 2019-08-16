@@ -12,7 +12,8 @@ public class TaikoModule : MonoBehaviour
 
     public float velocity = 5.0f;
     public float judgeDistance = 100;
-
+    public float judgeOffset = 100;
+    public float noteSpeed;
 
     [HideInInspector]
     public List<Note> data;
@@ -80,7 +81,7 @@ public class TaikoModule : MonoBehaviour
             float time = SoundModule.Instance.BGM.time;
             if ( data.Count > 0 && (float) (data [0].timing) / 1000.0f < time ) {
                 TaikoNote note = Spawn(data[0]);
-                note.Init(SpawnPoint, data[0], ()=>{ Despawn (note.gameObject); });
+                note.Init(SpawnPoint, data[0], ()=>{ Despawn (note.gameObject); }, noteSpeed, judgeOffset);
                 data.RemoveAt(0);
             } 
 
@@ -103,7 +104,7 @@ public class TaikoModule : MonoBehaviour
         }
 
         if (min > Vector3.Distance(target.transform.position, JudgePoint.position)) min = Vector3.Distance(target.transform.position, JudgePoint.position);
-        dummyText.text = string.Format ("distance:{0}\nMin dist:{1}",Vector3.Distance(target.transform.position, JudgePoint.position), min);
+        dummyText.text = string.Format("distance:{0}\nMin dist:{1}", target.transform.position.x - JudgePoint.position.x, min);
 
         if (Vector3.Distance(target.transform.position, JudgePoint.position) > judgeDistance) {
             
