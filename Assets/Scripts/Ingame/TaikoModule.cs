@@ -148,15 +148,15 @@ public class TaikoModule : MonoBehaviour
     private void JudgeChannelLeftClick () {
        // use channels [0]
         TaikoNote target = GetNearestGlobal();
-        if (target == null || (target != null && target.IsJudged) || (target != null && target.channel == 1))  return;
-        JudgeTouch (target);        
+        if (target == null || (target != null && target.IsJudged))  return;
+        JudgeTouch (target, 0);        
     }
 
     private void JudgeChannelRightClick () {
         // use channels [1]
         TaikoNote target = GetNearestGlobal();
-        if (target == null || (target != null && target.IsJudged) || (target != null && target.channel == 0)) return;
-        JudgeTouch (target, true);        
+        if (target == null || (target != null && target.IsJudged)) return;
+        JudgeTouch (target, 1, true);        
     
     }
 
@@ -170,13 +170,14 @@ public class TaikoModule : MonoBehaviour
         else return null;
     }
 
-    private void JudgeTouch(TaikoNote target, bool changeText = false) {
+    private void JudgeTouch(TaikoNote target, int targetChannel, bool changeText = false) {
         float distance = Vector3.Distance (target.transform.position, JudgePoint.position);
         Debug.Log (distance);
         if (distance >= GameConstant.JUDGE_OFFSET_ENTRY) {
             // not reached judge entry
             return;            
         }
+
         else if (distance >= GameConstant.JUDGE_OFFSET_NORMAL) {
             // miss
             target.SetJudged();
@@ -185,27 +186,38 @@ public class TaikoModule : MonoBehaviour
             GameUI.Instance.UpdateJudgeText ("Miss!");
             return;
         }
-        else if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
-            // normal touch
-            target.SetJudged();
-            target.PlayNormalTouchEffect();
-            this.Score += GameConstant.JUDGE_SCORE_0;
-            this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
-            GameUI.Instance.UpdateJudgeText ("Good!");
-            if (changeText) target.ChangeText();
-            return;
-        }
-        else if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
-            //exact touch
-            target.SetJudged();
-            target.PlayExactTouchEffect();
-            this.Score += GameConstant.JUDGE_SCORE_1;
-            this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
-            GameUI.Instance.UpdateJudgeText ("Exact!");
-            if (changeText) target.ChangeText();
-            return;
-        }
+        else {
+            if (target.channel != targetChannel) {
+                // miss
+                target.SetJudged();
+                target.PlayMissTouchEffect();
+                this.Life = Mathf.Max (0.0f, this.life - GameConstant.JUDGE_MISS_LIFE_PENALTY);
+                GameUI.Instance.UpdateJudgeText ("Miss!");
+                return;
+            }
 
+            if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
+                // normal touch
+                target.SetJudged();
+                target.PlayNormalTouchEffect();
+                this.Score += GameConstant.JUDGE_SCORE_0;
+                this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
+                GameUI.Instance.UpdateJudgeText ("Good!");
+                if (changeText) target.ChangeText();
+                return;
+            }
+            else if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
+                //exact touch
+                target.SetJudged();
+                target.PlayExactTouchEffect();
+                this.Score += GameConstant.JUDGE_SCORE_1;
+                this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
+                GameUI.Instance.UpdateJudgeText ("Exact!");
+                if (changeText) target.ChangeText();
+                return;
+            }
+        }
+        
         //Despawn (target.gameObject);
     }
 
