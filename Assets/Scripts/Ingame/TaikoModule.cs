@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TaikoModule : MonoBehaviour
@@ -22,6 +23,7 @@ public class TaikoModule : MonoBehaviour
         get { return this.life; }
         set {
             this.life = value;
+            if (this.life <= 0) GameOver();
             GameUI.Instance.UpdateLifeBar (this.life);
         }
     }
@@ -234,6 +236,12 @@ public class TaikoModule : MonoBehaviour
     private void AutoJudgeMiss () {
         this.Life = Mathf.Max (0.0f, this.life - GameConstant.JUDGE_MISS_LIFE_PENALTY);
         GameUI.Instance.UpdateJudgeText ("Miss!");
+    }
+
+    private void GameOver()
+    {
+        SoundModule.Instance.StopBGM();
+        SceneManager.LoadScene("GameOver");
     }
 
 

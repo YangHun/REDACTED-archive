@@ -10,6 +10,8 @@ using Debug = System.Diagnostics.Debug;
 
 public class SongButton : MonoBehaviour
 {
+    private LobbyUI lobbyUI;
+    
     [SerializeField] private Button selectButton;
     [SerializeField] private RectTransform detailPanel;
     private Button playButton;
@@ -20,14 +22,9 @@ public class SongButton : MonoBehaviour
     
     [SerializeField] private bool isOpened = true;
 
-    private static SongButton[] allButtons;
-
     void Awake()
     {
-        if (allButtons == null)
-        {
-            allButtons = transform.parent.GetComponentsInChildren<SongButton>();
-        }
+        lobbyUI = FindObjectOfType<LobbyUI>();
         
         playButton = detailPanel.GetComponentInChildren<Button>();
 
@@ -37,7 +34,7 @@ public class SongButton : MonoBehaviour
         selectButton.onClick.AddListener(() =>
         {
             ToggleDescription();
-            foreach (var button in allButtons)
+            foreach (var button in lobbyUI.AllButtons)
             {
                 if (button.isOpened && button != this)
                 {
