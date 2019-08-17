@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class TaikoNote : MonoBehaviour
 {
@@ -11,21 +13,24 @@ public class TaikoNote : MonoBehaviour
     private float offset;
     System.Action onDespawn;
 
+    public TextMeshProUGUI text;
+
 
     private float barLength;
     
-    public void Init(Transform parent, Note data, RectTransform bar, System.Action onDespawn, float speed = 1000, float offset = 0) {
+    public void Init(Note data, float barLength, System.Action onDespawn, float speed = 1000, float offset = 0) {
         this.rect = GetComponent<RectTransform>();
         this.data = data;
         this.timingHint = data.timing;
         this.onDespawn = onDespawn;
-        this.transform.SetParent(parent);
-        this.barLength = bar.rect.width;
+        this.barLength = barLength;
         this.transform.localPosition = Vector3.zero;
         this.transform.localScale = Vector3.one;
 
         this.gameObject.SetActive(true);
         
+        this.text.text = this.data.charactor;
+
         this.speed = speed;
         this.offset = offset;
     }
@@ -40,5 +45,17 @@ public class TaikoNote : MonoBehaviour
         }
         //this.rect.anchoredPosition = new Vector3( speed * (data.timing / 1000 - SoundModule.Instance.GetTiming) - offset, 0);
         this.rect.anchoredPosition = Vector2.right * ( ((float)data.timing/1000.0f) - SoundModule.Instance.BGM.time) * barLength * velocity;
+    }
+
+    public void PlayNormalTouchEffect() {
+        //todo : normal score effect
+    }
+
+    public void PlayExactTouchEffect() {
+        // todo : exact score effect
+    }
+
+    public void PlayMissTouchEffect() {
+
     }
 }

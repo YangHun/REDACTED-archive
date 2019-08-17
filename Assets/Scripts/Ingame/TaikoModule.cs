@@ -6,17 +6,42 @@ using UnityEngine.UI;
 public class TaikoModule : MonoBehaviour
 {
     
+    private int score;
+    
+    public int Score {
+        get { return this.score; }
+        set { 
+            this.score = value;
+            GameUI.Instance.UpdateScoreText(this.score);
+        }
+    }
+    
+    private float life;
 
-    public Text dummyText;
-    private float min = Mathf.Infinity;
+    public float Life {
+        get { return this.life; }
+        set {
+            this.life = value;
+            GameUI.Instance.UpdateLifeBar (this.life);
+        }
+    }
+    
+    [SerializeField]
+    List <NoteChannel> channels;
 
-    public float velocity = 5.0f;
-    public float judgeDistance = 100;
-    public float judgeOffset = 100;
-    public float noteSpeed;
 
-    [HideInInspector]
-    public List<Note> data;
+    [SerializeField]
+    GameObject notebase;
+    [SerializeField]
+    GameObject channelbase;
+
+
+    [SerializeField]
+    Transform notePool;
+    [SerializeField]
+    Transform JudgePoint;
+    [SerializeField]
+    Transform channelRoot;
 
 
     [SerializeField]
@@ -25,47 +50,38 @@ public class TaikoModule : MonoBehaviour
     private List <GameObject> spawned = new List<GameObject>();
 
 
-    public GameObject note;
-    public Transform SpawnPoint;
-    public Transform JudgePoint;
+    public float velocity = 5.0f;
 
-    public RectTransform bar;
 
-    public void Init (List<Note> data) {
-        if (data != null) this.data = data;
-        else {
-            this.data = new List<Note>();
-            for (int i = 0; i < 50; i ++) {
-                Note n = new Note();
-                n.timing = i * 500;
-                n.charactor = ((char)((int)'a' + i)).ToString();
-                this.data.Add (n);
-            }
+    private int totalCount;
+
+    #region dummy UI    
+    public Text dummyText;
+    #endregion
+
+
+    public void Init (List<List<Note>> channel) {
+        if (channels == null) channels = new List <NoteChannel>();
+        else channels.Clear();
+
+        this.notebase.SetActive(false);
+        this.channelbase.SetActive(false);
+        this.Score = 0;
+        this.Life = 1.0f;
+
+        totalCount = 0;
+        for (int i = 0; i < channel.Count; ++i) {
+            NoteChannel c = GameObject.Instantiate(channelbase).GetComponent<NoteChannel>();
+            c.transform.SetParent(this.channelRoot, false);
+            c.Init(channel [i], Spawn, Despawn, AutoJudgeMiss);
+            channels.Add(c);
+            totalCount += channel [i].Count;
         }
-        
-        this.note.SetActive(false);
-        ExpandPool();
 
 
-        InputModule.onLeftMouseClicked += TryPass;
-        InputModule.onRightMouseClicked += TryReject;
-        
-
-        Play();
-    }
-
-    public void Flush (bool disableNotes = false) {
-        InputModule.onLeftMouseClicked -= TryPass;
-        InputModule.onRightMouseClicked -= TryReject;
-        
-        if (disableNotes) {
-            foreach (GameObject obj in spawned) {
-                Despawn (obj);
-            }
-        }
-        this.data.Clear();
-        
-        StopAllCoroutines();
+        InputModule.onLeftMouseClicked += JudgeChannelLeftClick;
+        InputModule.onRightMouseClicked += JudgeChannelRightClick;
+        Play();   
     }
 
     private void Play () {
@@ -73,30 +89,44 @@ public class TaikoModule : MonoBehaviour
         StartCoroutine (OnPlay());
     }
 
+    public void Flush () {
+        foreach (NoteChannel c in this.channels) {
+            c.Flush();
+        }    
+        channels.Clear();
+        
+        InputModule.onLeftMouseClicked -= JudgeChannelLeftClick;
+        InputModule.onRightMouseClicked -= JudgeChannelRightClick;
+        StopAllCoroutines();
+    }
+
     private void ExpandPool () {
         if (this.waited.Count == 0) {
             for (int i = 0; i < 30; i++) {
-                GameObject obj = GameObject.Instantiate (this.note, this.gameObject.transform, false);
+                GameObject obj = GameObject.Instantiate (this.notebase, this.gameObject.transform, false);
+                obj.transform.SetParent(notePool, false);
                 this.waited.Add (obj.gameObject);
             }
         }
     }
 
-    private TaikoNote Spawn () {
+     private TaikoNote Spawn () {
         if (this.waited.Count == 0) {
             ExpandPool ();
         }
 
         TaikoNote target = this.waited [0].GetComponent<TaikoNote>();
         this.spawned.Add (target.gameObject);
-        this.waited.RemoveAt (0);
+        this.waited.RemoveAt (0);   
         return target;
     }
 
-    private void Despawn (GameObject obj) {
+    private void Despawn (GameObject obj, System.Action onComplete = null) {
         obj.SetActive(false);
+        obj.transform.SetParent(notePool);
         this.spawned.Remove (obj);
         this.waited.Add(obj);
+        onComplete?.Invoke();
     }
 
     private IEnumerator OnPlay () {
@@ -106,73 +136,64 @@ public class TaikoModule : MonoBehaviour
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
             float current = SoundModule.Instance.BGM.time;
-
-            for (int i = 0; i < data.Count; ++i) {
-                if (  ((float)data [0].timing / 1000.0f - current) * velocity >= 1) break;
-                TaikoNote note = Spawn();
-                note.Init(SpawnPoint, data[0], bar, ()=>{ Despawn (note.gameObject); });
-                data.RemoveAt(0);
+            foreach (NoteChannel c in channels) {
+                c.OnUpdate(velocity);
             }
-
-            foreach (Transform n in SpawnPoint) {
-                if (n.gameObject.activeSelf) n.GetComponent<TaikoNote>().OnUpdate(velocity);
-            }
+            
 
             yield return null;
         }
     }
 
-
-
-
-    private void TryPass () {
-        TaikoNote target = GetNearest();
-        if (target == null) {
-            Debug.Log ("null!!");
-            return;
-        }
-
-        if (min > Vector3.Distance(target.transform.position, JudgePoint.position)) min = Vector3.Distance(target.transform.position, JudgePoint.position);
-        dummyText.text = string.Format("distance:{0}\nMin dist:{1}", target.transform.position.x - JudgePoint.position.x, min);
-
-        if (Vector3.Distance(target.transform.position, JudgePoint.position) > judgeDistance) {
-            
-            Debug.LogError ("Failed!");
-             //todo : handle this case
-            return;
-        }
-
-        else {
-            Debug.LogError ("Success!");
-        }
-
-
-        
-
-        //todo : check this note to be passed
-
-
-
+    private void JudgeChannelLeftClick () {
+       // use channels [0]
+        TaikoNote target = channels[0].GetNearest();
+        if (target == null) return;
+        JudgeTouch (target);        
     }
 
-    private void TryReject () {
-        //todo
+    private void JudgeChannelRightClick () {
+        // use channels [1]
+        TaikoNote target = channels[1].GetNearest();
+        if (target == null) return;
+        JudgeTouch (target);        
+    
     }
 
-
-    private TaikoNote GetNearest () {
-        float distance = Mathf.Infinity;
-        Transform result = null;
-        foreach (Transform n in SpawnPoint) {
-            if (!n.gameObject.activeSelf) continue;
-            float d = Vector3.Distance(n.position, JudgePoint.position);
-            if (distance > d) {
-                distance = d;
-                result = n;
-            }
+    private void JudgeTouch(TaikoNote target) {
+        float distance = Vector3.Distance (target.transform.position, JudgePoint.position);
+        Debug.Log (distance);
+        if (distance >= GameConstant.JUDGE_OFFSET_ENTRY) {
+            // not reached judge entry
+            return;            
+        }
+        else if (distance >= GameConstant.JUDGE_OFFSET_NORMAL) {
+            // miss
+            target.PlayMissTouchEffect();
+            this.Life = Mathf.Max (0.0f, this.life - GameConstant.JUDGE_MISS_LIFE_PENALTY);
+            GameUI.Instance.UpdateJudgeText ("Miss!");
+        }
+        else if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
+            // normal touch
+            target.PlayNormalTouchEffect();
+            this.Score += GameConstant.JUDGE_SCORE_0;
+            this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
+            GameUI.Instance.UpdateJudgeText ("Good!");
+        }
+        else if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
+            //exact touch
+            target.PlayExactTouchEffect();
+            this.Score += GameConstant.JUDGE_SCORE_1;
+            this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
+            GameUI.Instance.UpdateJudgeText ("Exact!");
         }
 
-        if (result == null) return null;
-        else return result.GetComponent<TaikoNote>();
+        Despawn (target.gameObject);
     }
+
+    private void AutoJudgeMiss () {
+        this.Life = Mathf.Max (0.0f, this.life - GameConstant.JUDGE_MISS_LIFE_PENALTY);
+    }
+
+
 }

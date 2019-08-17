@@ -22,7 +22,7 @@ public class SoundModuleTest : MonoBehaviour
                 text.text = "bgm\nOff";
             });
             var channels = Parser.ParseString(mapfile.text);
-            module.Init(channels[0]);
+            module.Init(channels);
             text.text = "bgm\nOn";
         }
         this.bgm = !this.bgm;

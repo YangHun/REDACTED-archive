@@ -18,9 +18,12 @@ public class InputModule : MonoBehaviour
 
     private IEnumerator OnUpdate() {
         while (true) {
-            if (Input.GetMouseButtonDown(0)) onLeftMouseClicked?.Invoke();
+            if (EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null) {
+                yield return null;
+                continue;
+            }
+            if (Input.GetMouseButtonDown(0)) onLeftMouseClicked?.Invoke();        
             else if (Input.GetMouseButtonDown(1)) onRightMouseClicked?.Invoke();
-            
             yield return null;
         }
     }
