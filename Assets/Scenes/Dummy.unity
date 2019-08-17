@@ -291,7 +291,12 @@ PrefabInstance:
         type: 3}
       propertyPath: mapfile
       value: 
-      objectReference: {fileID: 4900000, guid: 29b54580f4f35c34fbc756aec94a79cc, type: 3}
+      objectReference: {fileID: 4900000, guid: 3f1c1d353a874443caf55965e9735cbc, type: 3}
+    - target: {fileID: 877664484104401660, guid: ec8da917e6ba0c840bbede0357dcb384,
+        type: 3}
+      propertyPath: bgmClips.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: dc589b88681b343d7b48a4bbfed91286, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec8da917e6ba0c840bbede0357dcb384, type: 3}
 --- !u!1001 &2490276006523362930

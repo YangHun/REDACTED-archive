@@ -1,36 +1,99 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
-
 
 static public class Parser
 {
     public static List<List<Note>> ParseString(string s)
     {
-        var lines_ = s.Replace("\r","").Split('\n');
-        var lines = new List<string>(lines_);
-        var l1 = lines[0].Split('\t');
-        int channelcnt = l1.Length - 1;
-        List<List<Note>> channels = new List<List<Note>>(l1.Length - 1);
+        string[] lines = s.Split(
+            new[] { "\r\n", "\r", "\n" },
+            StringSplitOptions.None
+        );
+        int channels = Int32.Parse(lines[0].Split(' ')[1]);
+        string noteLengthStr = lines[1].Split(' ')[1]; 
+        float noteLength = (float)Int32.Parse(noteLengthStr.Split('/')[0]) / (float)Int32.Parse(noteLengthStr.Split('/')[1]);
+        int bpm = Int32.Parse(lines[2].Split(' ')[1]);
         
-        Debug.Log(l1);
-        lines.RemoveAt(0);
+        int lineLen = lines.Length;
+        int lastTime = 0;
 
-        for (int i = 0; i < channelcnt; i++) channels.Add(new List<Note>());
-            foreach (var line in lines)
+        List<List<Note>> notes = new List<List<Note>>();
+        for (int channel = 0; channel < channels; channel++)
         {
-            if (Regex.Match(line, "^[\\s]*$").Success) // if blank, ignore
-                continue;
-            var line_ = line.Split('\t');
-            int timing = int.Parse(line_[0]);
-            for (int i = 0; i < channelcnt; i++)
+            notes.Add(new List<Note>());
+        }
+        
+        for (int i = 4; i < lineLen; i++)
+        {
+            int channel = (i - 4) % (channels + 1);
+            if (channel == channels)
             {
-                if (Regex.Match(line_[i + 1], "^[\\s]*$").Success) // if blank, ignore
-                    continue;
-                channels[i].Add(new Note() { timing = timing, charactor = line_[i + 1] });
+                continue;
+            }
+            int time = lastTime;
+            
+            bool isInSubtime = false;
+            int subTime = 0;
+            List<Note> tempNotes = new List<Note>();
+            foreach (char c in lines[i])
+            {
+                switch (c)
+                {
+                    case ' ':
+                        break;
+                    case '-':
+                    case 'ㅡ':
+                        if (isInSubtime) subTime++;
+                        else time++;
+                        break;
+                    case '|':
+                        break;
+                    case '(':
+                        isInSubtime = true;
+                        break;
+                    case ')':
+                        isInSubtime = false;
+                        foreach (Note note in tempNotes)
+                        {
+                            notes[channel].Add(new Note
+                            {
+                                timing = (int)((60000.0f / bpm * 4) * noteLength * (time + note.timing / tempNotes.Count)), 
+                                charactor = note.charactor
+                            });
+                        }
+                        tempNotes.Clear();
+                        subTime = 0;
+                        time++;
+                        break;
+                    default:
+                        // read hangul char
+                        if (isInSubtime)
+                        {
+                            tempNotes.Add(new Note {timing = subTime, charactor = c.ToString()});
+                            subTime++;
+                        }
+                        else
+                        {
+                            notes[channel].Add(new Note
+                            {
+                                timing = (int)((60000.0f / bpm * 4) * noteLength * time),
+                                charactor = c.ToString()
+                            });
+                            time++;
+                        }
+                        break;
+                }
+            }
+
+            if (channel == channels - 1)
+            {
+                lastTime = time;
             }
         }
-        return channels;
+        
+        return notes;
     }
 }
