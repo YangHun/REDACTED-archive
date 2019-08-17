@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   channels: []
-  notebase: {fileID: 4161304359630220195}
+  notebase: {fileID: 3715711205305966668}
   channelbase: {fileID: 4563693863346317779}
   notePool: {fileID: 1360573713029640828}
   JudgePoint: {fileID: 5642369179823967481}
@@ -475,7 +475,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 1360573713029640828}
-  - {fileID: 6080894932782880819}
+  - {fileID: 6794975652870575068}
   - {fileID: 6251868547975322724}
   - {fileID: 6522223112323497924}
   m_Father: {fileID: 8103766335467315538}
@@ -546,7 +546,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!1001 &6350232187962912385
+--- !u!1001 &5913148676032669038
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -663,17 +663,37 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 517513590625699527, guid: 993e20713157466469778ec144156e24,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 517513590625699527, guid: 993e20713157466469778ec144156e24,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 517513590625699527, guid: 993e20713157466469778ec144156e24,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 517513590625699527, guid: 993e20713157466469778ec144156e24,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 993e20713157466469778ec144156e24, type: 3}
---- !u!1 &4161304359630220195 stripped
+--- !u!1 &3715711205305966668 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7034449736170784034, guid: 993e20713157466469778ec144156e24,
     type: 3}
-  m_PrefabInstance: {fileID: 6350232187962912385}
+  m_PrefabInstance: {fileID: 5913148676032669038}
   m_PrefabAsset: {fileID: 0}
---- !u!224 &6080894932782880819 stripped
+--- !u!224 &6794975652870575068 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 883588703710672562, guid: 993e20713157466469778ec144156e24,
     type: 3}
-  m_PrefabInstance: {fileID: 6350232187962912385}
+  m_PrefabInstance: {fileID: 5913148676032669038}
   m_PrefabAsset: {fileID: 0}
