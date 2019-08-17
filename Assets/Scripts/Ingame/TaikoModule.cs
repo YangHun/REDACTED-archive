@@ -193,6 +193,7 @@ public class TaikoModule : MonoBehaviour
 
     private void AutoJudgeMiss () {
         this.Life = Mathf.Max (0.0f, this.life - GameConstant.JUDGE_MISS_LIFE_PENALTY);
+        GameUI.Instance.UpdateJudgeText ("Miss!");
     }
 
 

@@ -38,7 +38,7 @@ public class TaikoNote : MonoBehaviour
     
     public void OnUpdate(float velocity) {
         Vector2 pos = this.rect.anchoredPosition;
-        if (pos.x < -200f) {
+        if (pos.x < GameConstant.JUDGE_OFFSET_ENTRY * -1) {
             onDespawn?.Invoke();
             onDespawn = null;
             return;

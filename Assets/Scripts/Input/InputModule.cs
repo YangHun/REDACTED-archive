@@ -18,10 +18,12 @@ public class InputModule : MonoBehaviour
 
     private IEnumerator OnUpdate() {
         while (true) {
+            /*
             if ( EventSystem.current != null && EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject != null) {
                 yield return null;
                 continue;
             }
+            */
             if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.LeftArrow)) onLeftMouseClicked?.Invoke();        
             else if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.RightArrow)) onRightMouseClicked?.Invoke();
             yield return null;

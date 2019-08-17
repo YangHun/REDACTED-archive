@@ -54,5 +54,7 @@ public class GameUI : Singleton<GameUI>
             yield return null;
             timer += Time.fixedDeltaTime;
         }
+        
+        text.color = Color32.Lerp(start, end, 1);
     }
 }
