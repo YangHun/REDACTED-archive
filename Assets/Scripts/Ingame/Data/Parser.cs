@@ -6,6 +6,7 @@ using UnityEngine;
 
 static public class Parser
 {
+    public static float lastBpm { get; private set; }
     public static List<List<Note>> ParseString(string s)
     {
         string[] lines = s.Split(
@@ -16,7 +17,7 @@ static public class Parser
         string noteLengthStr = lines[1].Split(' ')[1]; 
         float noteLength = (float)Int32.Parse(noteLengthStr.Split('/')[0]) / (float)Int32.Parse(noteLengthStr.Split('/')[1]);
         int bpm = Int32.Parse(lines[2].Split(' ')[1]);
-        
+        lastBpm = bpm;
         int lineLen = lines.Length;
         int lastTime = 0;
 

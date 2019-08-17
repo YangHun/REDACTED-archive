@@ -10,7 +10,16 @@ public class SpriteAnimator : MonoBehaviour
     public bool playOnStart;
     [ Range(10, 60) ]
     public float playbackSpeed = 30;
+    public enum Type {
+        centerguy,
+        bass,
+        other
+    }
+    public Type type;
     public List<Sprite> sprites;
+
+    float Bpm { get { return Parser.lastBpm; } }
+    float Beat { get { return SoundModule.Instance.GetTiming * 60 / Bpm; } }
 
     Image dis;
     // Start is called before the first frame update
@@ -22,6 +31,7 @@ public class SpriteAnimator : MonoBehaviour
         if (playOnStart) StartAnimation();
     }
 
+
     Coroutine playingRoutine;
     public void StartAnimation()
     {
@@ -30,18 +40,53 @@ public class SpriteAnimator : MonoBehaviour
     }
     IEnumerator AnimationRoutine()
     {
-        do
+        if (type == Type.other)
         {
-            foreach (var sprite in sprites)
+            playbackSpeed = Bpm / 60 * sprites.Count / 4;
+            do
             {
-                dis.sprite = sprite;
+                foreach (var sprite in sprites)
+                {
+                    dis.sprite = sprite;
+                    yield return new WaitForSeconds(1 / playbackSpeed);
+                }
+            } while (loop);
+            playingRoutine = null;
+        }
+        if (type == Type.bass)
+        {
+            do
+            {
+                foreach (var sprite in sprites)
+                {
+                    dis.sprite = sprite;
 
-                yield return new WaitForSeconds(1 / playbackSpeed);
-            }
-            dis.sprite = sprites[0];
-            yield return new WaitForSeconds(1);
-        } while (loop);
-        dis.sprite = sprites[0];
-        playingRoutine = null;
+                    yield return new WaitForSeconds(Random.Range(1 / playbackSpeed, 1));
+                }
+            } while (loop);
+            playingRoutine = null;
+        }
+        if (type == Type.centerguy)
+        {
+            
+            playbackSpeed = Bpm/60*30/4;
+            do
+            {
+                foreach (var sprite in sprites)
+                {
+                    dis.sprite = sprite;
+
+                    yield return new WaitForSeconds(1 / playbackSpeed);
+                }
+                for (int i = 0; i < 2; i++)
+                {
+                    dis.sprite = sprites[12];
+                    yield return new WaitForSeconds(4 / playbackSpeed);
+                    dis.sprite = sprites[13];
+                    yield return new WaitForSeconds(4 / playbackSpeed);
+                }
+            } while (loop);
+            playingRoutine = null;
+        }
     }
 }
