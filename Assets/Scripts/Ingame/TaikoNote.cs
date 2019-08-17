@@ -16,7 +16,11 @@ public class TaikoNote : MonoBehaviour
 
     public TextMeshProUGUI text;
 
-
+    private bool judged = false;
+    public bool IsJudged {
+        get { return this.judged; }
+    }
+ 
     [SerializeField]
     ParticleSystem circle;
 
@@ -37,6 +41,7 @@ public class TaikoNote : MonoBehaviour
         this.transform.localScale = Vector3.one;
 
         this.gameObject.SetActive(true);
+        this.judged = false;
         
         this.text.text = this.data.charactor;
 
@@ -62,6 +67,7 @@ public class TaikoNote : MonoBehaviour
 
     public void SetJudged () {
         this.onMiss = null;
+        this.judged = true;
     }
 
     public void PlayNormalTouchEffect() {

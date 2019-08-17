@@ -148,14 +148,14 @@ public class TaikoModule : MonoBehaviour
     private void JudgeChannelLeftClick () {
        // use channels [0]
         TaikoNote target = channels[0].GetNearest();
-        if (target == null) return;
+        if (target == null || (target != null && target.IsJudged))  return;
         JudgeTouch (target);        
     }
 
     private void JudgeChannelRightClick () {
         // use channels [1]
         TaikoNote target = channels[1].GetNearest();
-        if (target == null) return;
+        if (target == null || (target != null && target.IsJudged)) return;
         JudgeTouch (target, true);        
     
     }
@@ -167,7 +167,7 @@ public class TaikoModule : MonoBehaviour
             // not reached judge entry
             return;            
         }
-        if (distance >= GameConstant.JUDGE_OFFSET_NORMAL) {
+        else if (distance >= GameConstant.JUDGE_OFFSET_NORMAL) {
             // miss
             target.SetJudged();
             target.PlayMissTouchEffect();
@@ -175,7 +175,7 @@ public class TaikoModule : MonoBehaviour
             GameUI.Instance.UpdateJudgeText ("Miss!");
             return;
         }
-        if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
+        else if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
             // normal touch
             target.SetJudged();
             target.PlayNormalTouchEffect();
@@ -185,7 +185,7 @@ public class TaikoModule : MonoBehaviour
             if (changeText) target.ChangeText();
             return;
         }
-        if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
+        else if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
             //exact touch
             target.SetJudged();
             target.PlayExactTouchEffect();
