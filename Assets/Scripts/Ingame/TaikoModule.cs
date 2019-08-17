@@ -156,39 +156,47 @@ public class TaikoModule : MonoBehaviour
         // use channels [1]
         TaikoNote target = channels[1].GetNearest();
         if (target == null) return;
-        JudgeTouch (target);        
+        JudgeTouch (target, true);        
     
     }
 
-    private void JudgeTouch(TaikoNote target) {
+    private void JudgeTouch(TaikoNote target, bool changeText = false) {
         float distance = Vector3.Distance (target.transform.position, JudgePoint.position);
         Debug.Log (distance);
         if (distance >= GameConstant.JUDGE_OFFSET_ENTRY) {
             // not reached judge entry
             return;            
         }
-        else if (distance >= GameConstant.JUDGE_OFFSET_NORMAL) {
+        if (distance >= GameConstant.JUDGE_OFFSET_NORMAL) {
             // miss
+            target.SetJudged();
             target.PlayMissTouchEffect();
             this.Life = Mathf.Max (0.0f, this.life - GameConstant.JUDGE_MISS_LIFE_PENALTY);
             GameUI.Instance.UpdateJudgeText ("Miss!");
+            return;
         }
-        else if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
+        if (distance >= GameConstant.JUDGE_OFFSET_EXACT) {
             // normal touch
+            target.SetJudged();
             target.PlayNormalTouchEffect();
             this.Score += GameConstant.JUDGE_SCORE_0;
             this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
             GameUI.Instance.UpdateJudgeText ("Good!");
+            if (changeText) target.ChangeText();
+            return;
         }
-        else if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
+        if (distance <= GameConstant.JUDGE_OFFSET_EXACT) {
             //exact touch
+            target.SetJudged();
             target.PlayExactTouchEffect();
             this.Score += GameConstant.JUDGE_SCORE_1;
             this.Life = Mathf.Min (1.0f, this.life + GameConstant.JUDGE_SUCCESS_LIFE_PRICE);
             GameUI.Instance.UpdateJudgeText ("Exact!");
+            if (changeText) target.ChangeText();
+            return;
         }
 
-        Despawn (target.gameObject);
+        //Despawn (target.gameObject);
     }
 
     private void AutoJudgeMiss () {

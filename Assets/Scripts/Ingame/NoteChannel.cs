@@ -11,7 +11,7 @@ public class NoteChannel : MonoBehaviour
     private Spawner SpawnNote;
     private Despawner DespawnNote;
 
-    private System.Action onDespawn;
+    private System.Action onMiss;
 
 
     [SerializeField]
@@ -32,11 +32,11 @@ public class NoteChannel : MonoBehaviour
 
     
 
-    public void Init (List<Note> data, Spawner spawner, Despawner despawner, System.Action onDespawn) {
+    public void Init (List<Note> data, Spawner spawner, Despawner despawner, System.Action onMiss) {
         this.data = data;
         this.SpawnNote = spawner;
         this.DespawnNote = despawner;
-        this.onDespawn = onDespawn;
+        this.onMiss = onMiss;
 
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
@@ -55,7 +55,7 @@ public class NoteChannel : MonoBehaviour
             if ( ((float)data[0].timing / 1000.0f - SoundModule.Instance.GetTiming) * velocity >= 1 ) break;
             TaikoNote note = SpawnNote();
             note.transform.SetParent(this.spawnPoint);
-            note.Init(data[0], bar.rect.width, ()=>{ DespawnNote (note.gameObject, onDespawn);});
+            note.Init(data[0], bar.rect.width, onMiss, ()=>{ DespawnNote (note.gameObject);});
             data.RemoveAt(0);
         }
 
