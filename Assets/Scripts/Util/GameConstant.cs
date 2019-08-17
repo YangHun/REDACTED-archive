@@ -13,4 +13,5 @@ public static class GameConstant
     public static readonly Color DUMMY_LIFE_COLOR_GREEN = new Color (196/255.0f, 1f, 78/255.0f, 1f); 
     public static readonly Color DUMMY_LIFE_COLOR_YELLOW = new Color (1f, 167/255.0f, 78/255.0f, 1f);
     public static readonly Color DUMMY_LIFE_COLOR_RED = new Color (183/255.0f, 0f, 0f, 1f);     
+    public static readonly Color NOTE_COLOR_TINT = new Color (1f, 254/255.0f, 177/255.0f, 1f);
 }

@@ -21,12 +21,20 @@ public class TaikoNote : MonoBehaviour
         get { return this.judged; }
     }
  
+    
+
+#region Effects
+
+    [SerializeField]
+    Image bgCircle;
+
     [SerializeField]
     ParticleSystem circle;
 
     [SerializeField]
     ParticleSystem burst;
-    
+
+#endregion
 
     private float barLength;
 
@@ -45,6 +53,9 @@ public class TaikoNote : MonoBehaviour
 
         this.gameObject.SetActive(true);
         this.judged = false;
+
+        this.text.color = new Color32 (0,0,0,255);
+        this.bgCircle.color = GameConstant.NOTE_COLOR_TINT;
         
         this.text.text = this.data.charactor;
 
@@ -57,6 +68,7 @@ public class TaikoNote : MonoBehaviour
         Vector2 pos = this.rect.anchoredPosition;
         if (onMiss != null && pos.x < GameConstant.JUDGE_OFFSET_ENTRY * -1) {
             onMiss?.Invoke();
+            PlayAutoMissTouchEffect();
             onMiss = null;
         }
         else if (pos.x < Screen.width / 2.0f * -1f) {
@@ -78,6 +90,9 @@ public class TaikoNote : MonoBehaviour
         Vector3 pos = transform.position - Vector3.forward;
         //this.circle.transform.position = pos;
         this.circle.Play();
+
+        this.bgCircle.color = new Color (1,1,1,0);
+        this.text.color = new Color32 (255,255,255,255);
     }
 
     public void PlayExactTouchEffect() {
@@ -88,6 +103,10 @@ public class TaikoNote : MonoBehaviour
         //this.burst.transform.position = pos;
         this.circle.Play();
         this.burst.Play();
+
+        
+        this.bgCircle.color = new Color (1,1,1,0);
+        this.text.color = new Color32 (255,255,255,255);
     }
 
     public void ChangeText() {
@@ -95,6 +114,12 @@ public class TaikoNote : MonoBehaviour
     }
 
     public void PlayMissTouchEffect() {
+        this.bgCircle.color = new Color (1,1,1,0);
+        this.text.color = new Color32 (255,0,0,255);
+    }
 
+    public void PlayAutoMissTouchEffect() {
+        this.bgCircle.color = new Color (1,1,1,0);
+        this.text.color = new Color32 (111,111,111,255);
     }
 }

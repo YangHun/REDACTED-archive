@@ -60,7 +60,7 @@ static public class Parser
                         {
                             notes[channel].Add(new Note
                             {
-                                timing = (int)((60000.0f / bpm * 4) * noteLength * (time + (float)note.timing / tempNotes.Count)), 
+                                timing = (int)((60000.0f / bpm * 4) * noteLength * (time + (float)note.timing / subTime)), 
                                 charactor = note.charactor
                             });
                         }

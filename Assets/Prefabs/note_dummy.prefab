@@ -249,5 +249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   timingHint: 0
   text: {fileID: 517513590625699527}
+  bgCircle: {fileID: 4643927554026329662}
   circle: {fileID: 0}
   burst: {fileID: 0}
+  channel: -1
