@@ -1,32 +1,52 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine;
 
-static public class Parser
+public class Song
 {
-    public static float lastBpm { get; private set; }
-    public static List<List<Note>> ParseString(string s)
+    // Song info (persistent between multiple scenes)
+    static public Song currentSong;
+    
+    public string Name { get; private set; }
+    public int NumChannels { get; private set; }
+    public int Bpm { get; private set; }
+    public List<List<Note>> Channels { get; private set; }
+    public AudioClip Clip { get; set; }
+
+    public Song(string name, int numChannels, int bpm, AudioClip clip)
     {
-        string[] lines = s.Split(
-            new[] { "\r\n", "\r", "\n" },
+        this.Name = name;
+        this.NumChannels = numChannels;
+        this.Bpm = bpm;
+        this.Clip = clip;
+
+        this.Channels = new List<List<Note>>();
+        for (int i = 0; i < numChannels; i++)
+        {
+            this.Channels.Add(new List<Note>());
+        }
+    }
+
+    public static Song LoadSong(string songName)
+    {
+        TextAsset textAsset = Resources.Load<TextAsset>($"Songs/{songName}_notes");
+        AudioClip clip = Resources.Load<AudioClip>($"Songs/{songName}");
+
+        string[] lines = textAsset.text.Split(
+            new[] {"\r\n", "\r", "\n"},
             StringSplitOptions.None
         );
+
         int channels = Int32.Parse(lines[0].Split(' ')[1]);
-        string noteLengthStr = lines[1].Split(' ')[1]; 
-        float noteLength = (float)Int32.Parse(noteLengthStr.Split('/')[0]) / (float)Int32.Parse(noteLengthStr.Split('/')[1]);
+        string noteLengthStr = lines[1].Split(' ')[1];
+        float noteLength = (float) Int32.Parse(noteLengthStr.Split('/')[0]) /
+                           (float) Int32.Parse(noteLengthStr.Split('/')[1]);
         int bpm = Int32.Parse(lines[2].Split(' ')[1]);
-        lastBpm = bpm;
         int lineLen = lines.Length;
         int lastTime = 0;
 
-        List<List<Note>> notes = new List<List<Note>>();
-        for (int channel = 0; channel < channels; channel++)
-        {
-            notes.Add(new List<Note>());
-        }
-        
+        Song song = new Song(songName, channels, bpm, clip);
+
         for (int i = 4; i < lineLen; i++)
         {
             int channel = (i - 4) % (channels + 1);
@@ -34,8 +54,9 @@ static public class Parser
             {
                 continue;
             }
+
             int time = lastTime;
-            
+
             bool isInSubtime = false;
             int subTime = 0;
             List<Note> tempNotes = new List<Note>();
@@ -59,12 +80,14 @@ static public class Parser
                         isInSubtime = false;
                         foreach (Note note in tempNotes)
                         {
-                            notes[channel].Add(new Note
+                            song.Channels[channel].Add(new Note
                             {
-                                timing = (int)((60000.0f / bpm * 4) * noteLength * (time + (float)note.timing / subTime)), 
+                                timing = (int) ((60000.0f / bpm * 4) * noteLength *
+                                                (time + (float) note.timing / subTime)),
                                 charactor = note.charactor
                             });
                         }
+
                         tempNotes.Clear();
                         subTime = 0;
                         time++;
@@ -78,13 +101,14 @@ static public class Parser
                         }
                         else
                         {
-                            notes[channel].Add(new Note
+                            song.Channels[channel].Add(new Note
                             {
-                                timing = (int)((60000.0f / bpm * 4) * noteLength * time),
+                                timing = (int) ((60000.0f / bpm * 4) * noteLength * time),
                                 charactor = c.ToString()
                             });
                             time++;
                         }
+
                         break;
                 }
             }
@@ -94,7 +118,7 @@ static public class Parser
                 lastTime = time;
             }
         }
-        
-        return notes;
+
+        return song;
     }
 }

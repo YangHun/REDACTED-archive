@@ -12,9 +12,17 @@ public class SpotlightAnimator : MonoBehaviour
     }
 
     UnityEngine.UI.Image me;
-    float Beat { get { return SoundModule.Instance.GetTiming / 60 * Parser.lastBpm; } }
+    float Beat { get { return SoundModule.Instance.GetTiming / 60 * taikoModule.Bpm; } }
     // Update is called once per frame
     bool LAsTChAngEd;
+
+    private TaikoModule taikoModule;
+
+    void Awake()
+    {
+        taikoModule = FindObjectOfType<TaikoModule>();
+    }
+    
     void Update()
     {
         if (gLobalenalbeD)

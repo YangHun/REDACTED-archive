@@ -18,10 +18,18 @@ public class SpriteAnimator : MonoBehaviour
     public Type type;
     public List<Sprite> sprites;
 
-    float Bpm { get { return Parser.lastBpm; } }
+    float Bpm { get { return taikoModule.Bpm; } }
     float Beat { get { return SoundModule.Instance.GetTiming * 60 / Bpm; } }
 
     Image dis;
+
+    private TaikoModule taikoModule;
+
+    void Awake()
+    {
+        taikoModule = FindObjectOfType<TaikoModule>();
+    }
+    
     // Start is called before the first frame update
     void Start()
     {

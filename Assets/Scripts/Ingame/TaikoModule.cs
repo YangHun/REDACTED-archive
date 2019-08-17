@@ -25,6 +25,12 @@ public class TaikoModule : MonoBehaviour
             GameUI.Instance.UpdateLifeBar (this.life);
         }
     }
+
+    private Song song;
+    public int Bpm
+    {
+        get { return song.Bpm; }
+    }
     
     [SerializeField]
     List <NoteChannel> channels;
@@ -60,7 +66,10 @@ public class TaikoModule : MonoBehaviour
     #endregion
 
 
-    public void Init (List<List<Note>> channel) {
+    public void Init (Song song)
+    {
+        this.song = song;
+        
         if (channels == null) channels = new List <NoteChannel>();
         else channels.Clear();
 
@@ -70,12 +79,12 @@ public class TaikoModule : MonoBehaviour
         this.Life = 1.0f;
 
         totalCount = 0;
-        for (int i = 0; i < channel.Count; ++i) {
+        for (int i = 0; i < song.Channels.Count; ++i) {
             NoteChannel c = GameObject.Instantiate(channelbase).GetComponent<NoteChannel>();
             c.transform.SetParent(this.channelRoot, false);
-            c.Init(i, channel [i], Spawn, Despawn, AutoJudgeMiss);
+            c.Init(i, song.Channels[i], Spawn, Despawn, AutoJudgeMiss);
             channels.Add(c);
-            totalCount += channel [i].Count;
+            totalCount += song.Channels[i].Count;
         }
 
 
@@ -133,6 +142,7 @@ public class TaikoModule : MonoBehaviour
         while (!SoundModule.Instance.BGM.isPlaying) {
             yield return null;
         }
+        SoundModule.Instance.PlayBGM(song.Clip);
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
             float current = SoundModule.Instance.BGM.time;
