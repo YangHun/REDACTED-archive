@@ -108,9 +108,9 @@ public class TaikoModule : MonoBehaviour
             float current = SoundModule.Instance.BGM.time;
 
             for (int i = 0; i < data.Count; ++i) {
-                if (  ((float)data [i].timing / 1000.0f - current) * velocity >= 1) break;
+                if (  ((float)data [0].timing / 1000.0f - current) * velocity >= 1) break;
                 TaikoNote note = Spawn();
-                note.Init(SpawnPoint, data[i], bar, ()=>{ Despawn (note.gameObject); });
+                note.Init(SpawnPoint, data[0], bar, ()=>{ Despawn (note.gameObject); });
                 data.RemoveAt(0);
             }
 
