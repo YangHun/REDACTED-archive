@@ -21,8 +21,14 @@ public class SoundModuleTest : MonoBehaviour
             SoundModule.Instance.PlayBGM(0, ()=> {
                 text.text = "bgm\nOff";
             });
-            var channels = Parser.ParseString(mapfile.text);
-            module.Init(channels);
+            if (Song.currentSong == null)
+            {
+                module.Init(Song.currentSong);
+            }
+            else
+            {
+                module.Init(Song.LoadSong("프리라이더"));
+            }
             text.text = "bgm\nOn";
         }
         this.bgm = !this.bgm;

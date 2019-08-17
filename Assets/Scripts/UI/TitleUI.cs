@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class TitleUI : MonoBehaviour
@@ -11,17 +14,11 @@ public class TitleUI : MonoBehaviour
 
     void Awake()
     {
-        startButton.onClick.AddListener(() =>
-        {
-            
-        });
-        creditsButton.onClick.AddListener(() =>
-        {
-            
-        });
+        startButton.onClick.AddListener(() => { SceneManager.LoadScene("SelectScene"); });
+        creditsButton.onClick.AddListener(() => { SceneManager.LoadScene("Credits"); });
         exitButton.onClick.AddListener(() =>
         {
-            
+            Application.Quit();
         });
     }
 }
