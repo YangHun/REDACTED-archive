@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Debug = System.Diagnostics.Debug;
 
 public class InputModule : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class InputModule : MonoBehaviour
     public static System.Action onRightMouseClicked = null;
 
     private Coroutine coroutine = null;
-    void Awake() {
+    void Start() {
         DontDestroyOnLoad (this.gameObject);
         //if (EventSystem.current == null) this.gameObject.AddComponent<EventSystem>();
         this.coroutine = StartCoroutine (OnUpdate());
