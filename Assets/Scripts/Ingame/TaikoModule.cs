@@ -67,6 +67,18 @@ public class TaikoModule : MonoBehaviour
     public Text dummyText;
     #endregion
 
+    void Start()
+    {
+        Debug.Log("Starting Taiko Module");
+        if (Song.currentSong != null)
+        {
+            Init(Song.currentSong);
+        }
+        else
+        {
+            Init(Song.LoadSong("freerider"));
+        }
+    }
 
     public void Init (Song song)
     {
@@ -141,9 +153,11 @@ public class TaikoModule : MonoBehaviour
     }
 
     private IEnumerator OnPlay () {
+        /*
         while (!SoundModule.Instance.BGM.isPlaying) {
             yield return null;
         }
+        */
         SoundModule.Instance.PlayBGM(song.Clip);
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
