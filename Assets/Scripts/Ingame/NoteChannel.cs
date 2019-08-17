@@ -29,14 +29,16 @@ public class NoteChannel : MonoBehaviour
 
     public float noteSpeed;
 
+    private int cid = -1;
 
     
 
-    public void Init (List<Note> data, Spawner spawner, Despawner despawner, System.Action onMiss) {
+    public void Init (int channelId, List<Note> data, Spawner spawner, Despawner despawner, System.Action onMiss) {
         this.data = data;
         this.SpawnNote = spawner;
         this.DespawnNote = despawner;
         this.onMiss = onMiss;
+        this.cid = channelId;
 
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
@@ -55,7 +57,7 @@ public class NoteChannel : MonoBehaviour
             if ( ((float)data[0].timing / 1000.0f - SoundModule.Instance.GetTiming) * velocity >= 1 ) break;
             TaikoNote note = SpawnNote();
             note.transform.SetParent(this.spawnPoint);
-            note.Init(data[0], bar.rect.width, onMiss, ()=>{ DespawnNote (note.gameObject);});
+            note.Init(data[0], bar.rect.width, onMiss, ()=>{ DespawnNote (note.gameObject);}, this.cid);
             data.RemoveAt(0);
         }
 

@@ -73,7 +73,7 @@ public class TaikoModule : MonoBehaviour
         for (int i = 0; i < channel.Count; ++i) {
             NoteChannel c = GameObject.Instantiate(channelbase).GetComponent<NoteChannel>();
             c.transform.SetParent(this.channelRoot, false);
-            c.Init(channel [i], Spawn, Despawn, AutoJudgeMiss);
+            c.Init(i, channel [i], Spawn, Despawn, AutoJudgeMiss);
             channels.Add(c);
             totalCount += channel [i].Count;
         }
@@ -147,17 +147,27 @@ public class TaikoModule : MonoBehaviour
 
     private void JudgeChannelLeftClick () {
        // use channels [0]
-        TaikoNote target = channels[0].GetNearest();
-        if (target == null || (target != null && target.IsJudged))  return;
+        TaikoNote target = GetNearestGlobal();
+        if (target == null || (target != null && target.IsJudged) || (target != null && target.channel == 1))  return;
         JudgeTouch (target);        
     }
 
     private void JudgeChannelRightClick () {
         // use channels [1]
-        TaikoNote target = channels[1].GetNearest();
-        if (target == null || (target != null && target.IsJudged)) return;
+        TaikoNote target = GetNearestGlobal();
+        if (target == null || (target != null && target.IsJudged) || (target != null && target.channel == 0)) return;
         JudgeTouch (target, true);        
     
+    }
+
+    private TaikoNote GetNearestGlobal () {
+        TaikoNote n0 = channels[0].GetNearest();
+        TaikoNote n1 = channels[1].GetNearest();
+
+        if (n0 == null && n1 != null) return n1;
+        else if (n1 == null && n0 != null) return n0;
+        else if (n0 != null && n1 != null) return ( Vector3.Distance (n0.transform.position, JudgePoint.position) < Vector3.Distance (n1.transform.position, JudgePoint.position))? n0 : n1;
+        else return null;
     }
 
     private void JudgeTouch(TaikoNote target, bool changeText = false) {

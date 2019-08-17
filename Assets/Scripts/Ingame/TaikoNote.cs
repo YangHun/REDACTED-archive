@@ -29,8 +29,10 @@ public class TaikoNote : MonoBehaviour
     
 
     private float barLength;
+
+    public int channel = -1;
     
-    public void Init(Note data, float barLength, System.Action onMiss, System.Action onDespawn, float speed = 1000, float offset = 0) {
+    public void Init(Note data, float barLength, System.Action onMiss, System.Action onDespawn, int channel, float speed = 1000, float offset = 0) {
         this.rect = GetComponent<RectTransform>();
         this.data = data;
         this.timingHint = data.timing;
@@ -39,6 +41,7 @@ public class TaikoNote : MonoBehaviour
         this.barLength = barLength;
         this.transform.localPosition = Vector3.zero;
         this.transform.localScale = Vector3.one;
+        this.channel = channel;
 
         this.gameObject.SetActive(true);
         this.judged = false;
