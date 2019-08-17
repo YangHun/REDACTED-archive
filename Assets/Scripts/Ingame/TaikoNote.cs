@@ -67,7 +67,7 @@ public class TaikoNote : MonoBehaviour
     public void PlayNormalTouchEffect() {
         //todo : normal score effect
         Vector3 pos = transform.position - Vector3.forward;
-        this.circle.transform.position = pos;
+        //this.circle.transform.position = pos;
         this.circle.Play();
     }
 
@@ -75,8 +75,8 @@ public class TaikoNote : MonoBehaviour
         // todo : exact score effect
         
         Vector3 pos = transform.position - Vector3.forward;
-        this.circle.transform.position = pos;
-        this.burst.transform.position = pos;
+        //this.circle.transform.position = pos;
+        //this.burst.transform.position = pos;
         this.circle.Play();
         this.burst.Play();
     }
