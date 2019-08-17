@@ -22,3 +22,6 @@ sysinfo.txt
 
 # Jetbrains IDEA files
 .idea/
+
+# macOS stuff
+*.DS_Store
