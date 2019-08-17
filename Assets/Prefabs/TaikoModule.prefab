@@ -31,10 +31,10 @@ RectTransform:
   m_Father: {fileID: 6251868547975322724}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 50, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3153209925146619679
 GameObject:
@@ -151,7 +151,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1458, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8566989591730812136
@@ -204,6 +204,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d6fa741845c664459567ffe99580e23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  timingHint: 0
 --- !u!1 &4807333120759288223
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,32 +559,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a7690c2b92a4fd4c9ea94a695bd65e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  velocity: 1
+  dummyText: {fileID: 0}
+  velocity: 0.5
   judgeDistance: 50
-  data:
-  - timing: 5000
-    charactor: a
-  - timing: 6000
-    charactor: b
-  - timing: 7000
-    charactor: c
-  - timing: 8000
-    charactor: d
-  - timing: 8500
-    charactor: e
-  - timing: 9000
-    charactor: f
-  - timing: 10000
-    charactor: g
-  - timing: 11000
-    charactor: h
-  - timing: 12000
-    charactor: i
-  - timing: 13300
-    charactor: j
+  judgeOffset: 100
+  noteSpeed: 0
+  data: []
+  waited: []
+  spawned: []
   note: {fileID: 4161304359630220195}
   SpawnPoint: {fileID: 1360573713029640828}
   JudgePoint: {fileID: 2195104965883064965}
+  bar: {fileID: 6251868547975322724}
 --- !u!1 &8502401937871580601
 GameObject:
   m_ObjectHideFlags: 0

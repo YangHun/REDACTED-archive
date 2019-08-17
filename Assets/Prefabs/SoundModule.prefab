@@ -190,7 +190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgmClips:
-  - {fileID: 8300000, guid: 7fed2cb286253a940abb73ce869e9090, type: 3}
+  - {fileID: 8300000, guid: 7dde9f44279149d4c89650c25e007bb4, type: 3}
   sfxClips:
   - {fileID: 8300000, guid: f54b5bbb7ffd40b42aec4d0d718723fe, type: 3}
 --- !u!1 &2654114600207467089
@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b9666e698ebc944ba9adca2b4cfb39c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  module: {fileID: 0}
 --- !u!1 &5181991010815855767
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,3 +697,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b9666e698ebc944ba9adca2b4cfb39c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  module: {fileID: 0}

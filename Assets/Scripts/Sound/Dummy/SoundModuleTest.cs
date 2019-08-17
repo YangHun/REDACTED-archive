@@ -14,7 +14,8 @@ public class SoundModuleTest : MonoBehaviour
     public void ToggleBGM (Text text) {
         if (this.bgm) {
             SoundModule.Instance.StopBGM();
-            text.text = "bgm\nOff";
+            text.text = "bgm\nOff"; 
+            module.Flush();
         }
         else {
             SoundModule.Instance.PlayBGM(0, ()=> {

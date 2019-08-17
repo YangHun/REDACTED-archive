@@ -19,7 +19,9 @@ public class TaikoModule : MonoBehaviour
     public List<Note> data;
 
 
+    [SerializeField]
     private List <GameObject> waited = new List<GameObject>();
+    [SerializeField]
     private List <GameObject> spawned = new List<GameObject>();
 
 
@@ -27,8 +29,19 @@ public class TaikoModule : MonoBehaviour
     public Transform SpawnPoint;
     public Transform JudgePoint;
 
+    public RectTransform bar;
+
     public void Init (List<Note> data) {
         if (data != null) this.data = data;
+        else {
+            this.data = new List<Note>();
+            for (int i = 0; i < 50; i ++) {
+                Note n = new Note();
+                n.timing = i * 500;
+                n.charactor = ((char)((int)'a' + i)).ToString();
+                this.data.Add (n);
+            }
+        }
         
         this.note.SetActive(false);
         ExpandPool();
@@ -39,6 +52,20 @@ public class TaikoModule : MonoBehaviour
         
 
         Play();
+    }
+
+    public void Flush (bool disableNotes = false) {
+        InputModule.onLeftMouseClicked -= TryPass;
+        InputModule.onRightMouseClicked -= TryReject;
+        
+        if (disableNotes) {
+            foreach (GameObject obj in spawned) {
+                Despawn (obj);
+            }
+        }
+        this.data.Clear();
+        
+        StopAllCoroutines();
     }
 
     private void Play () {
@@ -55,7 +82,7 @@ public class TaikoModule : MonoBehaviour
         }
     }
 
-    private TaikoNote Spawn (Note data) {
+    private TaikoNote Spawn () {
         if (this.waited.Count == 0) {
             ExpandPool ();
         }
@@ -69,7 +96,7 @@ public class TaikoModule : MonoBehaviour
     private void Despawn (GameObject obj) {
         obj.SetActive(false);
         this.spawned.Remove (obj);
-        this.spawned.Add(obj);
+        this.waited.Add(obj);
     }
 
     private IEnumerator OnPlay () {
@@ -78,12 +105,14 @@ public class TaikoModule : MonoBehaviour
         }
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
-            float time = SoundModule.Instance.BGM.time;
-            if ( data.Count > 0 && (float) (data [0].timing) / 1000.0f < time ) {
-                TaikoNote note = Spawn(data[0]);
-                note.Init(SpawnPoint, data[0], ()=>{ Despawn (note.gameObject); }, noteSpeed, judgeOffset);
+            float current = SoundModule.Instance.BGM.time;
+
+            for (int i = 0; i < data.Count; ++i) {
+                if (  ((float)data [i].timing / 1000.0f - current) * velocity >= 1) break;
+                TaikoNote note = Spawn();
+                note.Init(SpawnPoint, data[i], bar, ()=>{ Despawn (note.gameObject); });
                 data.RemoveAt(0);
-            } 
+            }
 
             foreach (Transform n in SpawnPoint) {
                 if (n.gameObject.activeSelf) n.GetComponent<TaikoNote>().OnUpdate(velocity);
@@ -108,13 +137,13 @@ public class TaikoModule : MonoBehaviour
 
         if (Vector3.Distance(target.transform.position, JudgePoint.position) > judgeDistance) {
             
-            Debug.LogError (" so far from judge line! :"+ Vector3.Distance(target.transform.position, JudgePoint.position));
+            Debug.LogError ("Failed!");
              //todo : handle this case
             return;
         }
 
         else {
-            Debug.Log ("distance:"+ Vector3.Distance(target.transform.position, JudgePoint.position));
+            Debug.LogError ("Success!");
         }
 
 
