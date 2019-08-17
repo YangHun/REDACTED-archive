@@ -23,11 +23,11 @@ public class SoundModuleTest : MonoBehaviour
             });
             if (Song.currentSong == null)
             {
-                module.Init(Song.currentSong);
+                module.Init(Song.LoadSong("freerider"));
             }
             else
             {
-                module.Init(Song.LoadSong("프리라이더"));
+                module.Init(Song.currentSong);
             }
             text.text = "bgm\nOn";
         }

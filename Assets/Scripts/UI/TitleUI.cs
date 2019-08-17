@@ -14,7 +14,7 @@ public class TitleUI : MonoBehaviour
 
     void Awake()
     {
-        startButton.onClick.AddListener(() => { SceneManager.LoadScene("SelectScene"); });
+        startButton.onClick.AddListener(() => { SceneManager.LoadScene("SelectSong"); });
         creditsButton.onClick.AddListener(() => { SceneManager.LoadScene("Credits"); });
         exitButton.onClick.AddListener(() =>
         {

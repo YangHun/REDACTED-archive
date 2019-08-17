@@ -809,6 +809,11 @@ PrefabInstance:
       propertyPath: songName
       value: ssulsong2
       objectReference: {fileID: 0}
+    - target: {fileID: 9167448835726146986, guid: c61f70a92f9494fb1a86d4fc6f9bf0ba,
+        type: 3}
+      propertyPath: isOpened
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c61f70a92f9494fb1a86d4fc6f9bf0ba, type: 3}
 --- !u!224 &910060655 stripped
@@ -1029,6 +1034,11 @@ PrefabInstance:
         type: 3}
       propertyPath: songName
       value: ssulsong
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167448835726146986, guid: c61f70a92f9494fb1a86d4fc6f9bf0ba,
+        type: 3}
+      propertyPath: isOpened
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c61f70a92f9494fb1a86d4fc6f9bf0ba, type: 3}
@@ -1435,6 +1445,11 @@ PrefabInstance:
         type: 3}
       propertyPath: songName
       value: freerider
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167448835726146986, guid: c61f70a92f9494fb1a86d4fc6f9bf0ba,
+        type: 3}
+      propertyPath: isOpened
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c61f70a92f9494fb1a86d4fc6f9bf0ba, type: 3}

@@ -50,8 +50,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a1bad34d1fb543009ef5508b8957894, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectButton: {fileID: 6297091099881730256}
   detailPanel: {fileID: 6297091098778753329}
   songName: antivaxxer
+  isOpened: 1
 --- !u!1 &6297091098778753328
 GameObject:
   m_ObjectHideFlags: 0

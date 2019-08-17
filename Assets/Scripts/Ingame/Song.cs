@@ -29,10 +29,10 @@ public class Song
 
     public static Song LoadSong(string songName)
     {
-        TextAsset asset = Resources.Load<TextAsset>($"songs/{songName}.txt");
-        AudioClip clip = Resources.Load<AudioClip>($"songs/{songName}.mp3");
+        TextAsset textAsset = Resources.Load<TextAsset>($"Songs/{songName}_notes");
+        AudioClip clip = Resources.Load<AudioClip>($"Songs/{songName}");
 
-        string[] lines = asset.text.Split(
+        string[] lines = textAsset.text.Split(
             new[] {"\r\n", "\r", "\n"},
             StringSplitOptions.None
         );
@@ -84,7 +84,7 @@ public class Song
                             song.Channels[channel].Add(new Note
                             {
                                 timing = (int) ((60000.0f / bpm * 4) * noteLength *
-                                                (time + (float) note.timing / tempNotes.Count)),
+                                                (time + (float) note.timing / subTime)),
                                 charactor = note.charactor
                             });
                         }

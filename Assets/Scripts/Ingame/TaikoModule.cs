@@ -65,6 +65,7 @@ public class TaikoModule : MonoBehaviour
     public void Init (Song song)
     {
         this.song = song;
+        
         if (channels == null) channels = new List <NoteChannel>();
         else channels.Clear();
 
@@ -137,6 +138,7 @@ public class TaikoModule : MonoBehaviour
         while (!SoundModule.Instance.BGM.isPlaying) {
             yield return null;
         }
+        SoundModule.Instance.PlayBGM(song.Clip);
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
             float current = SoundModule.Instance.BGM.time;

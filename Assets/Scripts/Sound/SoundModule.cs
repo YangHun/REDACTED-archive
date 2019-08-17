@@ -47,6 +47,14 @@ public class SoundModule : Singleton<SoundModule>
         StartCoroutine (DelayedCall(this.bgm, onStop));  
     }
 
+    public void PlayBGM(AudioClip clip, System.Action onStop = null)
+    {
+        if (this.bgm.isPlaying) this.bgm.Stop();
+        this.bgm.clip = clip;
+        this.bgm.Play();
+        StartCoroutine(DelayedCall(this.bgm, onStop));
+    }
+
 
     public void SetBGMVolume (float value) {
         this.bgm.volume = Mathf.Clamp (value,0.0f, 1.0f);
