@@ -2,7 +2,7 @@
 
 public static class GameConstant
 {
-    public static readonly float JUDGE_OFFSET_ENTRY = 300f;
+    public static readonly float JUDGE_OFFSET_ENTRY = 110f;
     public static readonly float JUDGE_OFFSET_NORMAL = 100f;
     public static readonly float JUDGE_OFFSET_EXACT = 40f;
     public static readonly int JUDGE_SCORE_0 = 100;
