@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Dummy.unity
     guid: 7e52d37a9d5697f4b97cf43a8927af38
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 9398f37fcb0f54c07bb4b4fcffafda77
   m_configObjects: {}
