@@ -67,16 +67,23 @@ public class TaikoModule : MonoBehaviour
     public Text dummyText;
     #endregion
 
+    AudioSource @as;
     void Start()
     {
+        @as = GetComponent<AudioSource>();
         Debug.Log("Starting Taiko Module");
         if (Song.currentSong != null)
         {
             Init(Song.currentSong);
+            if(Song.currentSong.Channels.Count >= 3)
+                HighlightModule.Instance.Init(Song.currentSong.Channels[2]);
         }
         else
         {
-            Init(Song.LoadSong("freerider"));
+            var songdata = Song.LoadSong("freerider");
+            Init(songdata);
+            if (songdata.Channels.Count >= 3)
+                HighlightModule.Instance.Init(songdata.Channels[2]);
         }
     }
 
@@ -93,7 +100,7 @@ public class TaikoModule : MonoBehaviour
         this.Life = 1.0f;
 
         totalCount = 0;
-        for (int i = 0; i < song.Channels.Count; ++i) {
+        for (int i = 0; i < 2; ++i) {
             NoteChannel c = GameObject.Instantiate(channelbase).GetComponent<NoteChannel>();
             c.transform.SetParent(this.channelRoot, false);
             c.Init(i, song.Channels[i], Spawn, Despawn, AutoJudgeMiss);

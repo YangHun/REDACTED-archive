@@ -30,13 +30,19 @@ public class SpriteAnimator : MonoBehaviour
         taikoModule = FindObjectOfType<TaikoModule>();
     }
     
-    // Start is called before the first frame update
-    void Start()
+    void Init()
     {
         Debug.Assert(sprites.Count >= 1);
         dis = GetComponent<Image>();
         dis.sprite = sprites[0];
         if (playOnStart) StartAnimation();
+    }
+
+    bool inited = false;
+    void Update()
+    {
+        if (inited == false) Init();
+        inited = true;
     }
 
 
