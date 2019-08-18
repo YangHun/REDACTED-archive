@@ -8,12 +8,14 @@ public class TaikoModule : MonoBehaviour
 {
     
     private int score;
-    
-    public int Score {
+
+    static public int LastScore { get; private set; }
+    public int Score { 
         get { return this.score; }
         set { 
             this.score = value;
             GameUI.Instance.UpdateScoreText(this.score);
+            LastScore = score;
         }
     }
     
@@ -182,15 +184,16 @@ public class TaikoModule : MonoBehaviour
        // use channels [0]
         TaikoNote target = GetNearestGlobal();
         if (target == null || (target != null && target.IsJudged))  return;
-        JudgeTouch (target, 0);        
+        JudgeTouch (target, 0);
+        if (@as.isPlaying) @as.Stop();
     }
 
     private void JudgeChannelRightClick () {
         // use channels [1]
         TaikoNote target = GetNearestGlobal();
         if (target == null || (target != null && target.IsJudged)) return;
-        JudgeTouch (target, 1, true);        
-    
+        JudgeTouch (target, 1, true);
+        @as.Play();
     }
 
     private TaikoNote GetNearestGlobal () {
