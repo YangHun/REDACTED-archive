@@ -183,6 +183,10 @@ public class TaikoModule : MonoBehaviour
 
             yield return null;
         }
+
+        // when game ended
+        GameClear();
+        
     }
 
     private void JudgeChannelLeftClick () {
@@ -276,6 +280,15 @@ public class TaikoModule : MonoBehaviour
         SoundModule.Instance.StopBGM();
         //Flush();
         SceneManager.LoadScene("GameOver");
+    }
+
+
+    private void GameClear()
+    {
+        this.onPlay = null;
+        SoundModule.Instance.StopBGM();
+        //Flush();
+        SceneManager.LoadScene("UWin");
     }
 
 
