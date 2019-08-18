@@ -53,7 +53,7 @@ public class SpotlightAnimator : MonoBehaviour
                     if (profile != null) {
                         profile.TryGetSettings (out ca);
                         if (ca != null) {
-                            ca.intensity.value = 1f;
+                            ca.intensity.value = 0.4f;
                         }
                     }
                 }
