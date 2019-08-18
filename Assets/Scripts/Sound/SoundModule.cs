@@ -24,7 +24,7 @@ public class SoundModule : Singleton<SoundModule>
     }
 
     void Awake() {
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
         Init();
     }
 

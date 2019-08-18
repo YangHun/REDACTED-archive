@@ -70,8 +70,11 @@ public class TaikoModule : MonoBehaviour
     #endregion
 
     AudioSource @as;
+
+    private Coroutine onPlay;
     void Start()
-    {
+    {   
+        this.onPlay= null;
         @as = GetComponent<AudioSource>();
         Debug.Log("Starting Taiko Module");
         if (Song.currentSong != null)
@@ -117,11 +120,13 @@ public class TaikoModule : MonoBehaviour
     }
 
     private void Play () {
-        StopAllCoroutines();
-        StartCoroutine (OnPlay());
+        if (this.onPlay != null) StopCoroutine (onPlay);
+        this.onPlay = StartCoroutine (OnPlay());
     }
 
     public void Flush () {
+        
+        StopAllCoroutines();
         foreach (NoteChannel c in this.channels) {
             c.Flush();
         }    
@@ -129,7 +134,6 @@ public class TaikoModule : MonoBehaviour
         
         InputModule.onLeftMouseClicked -= JudgeChannelLeftClick;
         InputModule.onRightMouseClicked -= JudgeChannelRightClick;
-        StopAllCoroutines();
     }
 
     private void ExpandPool () {
@@ -171,6 +175,7 @@ public class TaikoModule : MonoBehaviour
         float length = SoundModule.Instance.BGM.clip.length;
         while (SoundModule.Instance.BGM.isPlaying) {
             float current = SoundModule.Instance.BGM.time;
+            yield return null;
             foreach (NoteChannel c in channels) {
                 c.OnUpdate(velocity);
             }
@@ -181,6 +186,7 @@ public class TaikoModule : MonoBehaviour
     }
 
     private void JudgeChannelLeftClick () {
+        if (this.onPlay == null) return;
        // use channels [0]
         TaikoNote target = GetNearestGlobal();
         if (target == null || (target != null && target.IsJudged))  return;
@@ -189,6 +195,7 @@ public class TaikoModule : MonoBehaviour
     }
 
     private void JudgeChannelRightClick () {
+        if (this.onPlay == null) return;
         // use channels [1]
         TaikoNote target = GetNearestGlobal();
         if (target == null || (target != null && target.IsJudged)) return;
@@ -264,7 +271,10 @@ public class TaikoModule : MonoBehaviour
 
     private void GameOver()
     {
+        if (this.onPlay != null) StopCoroutine (this.onPlay);
+        this.onPlay = null;
         SoundModule.Instance.StopBGM();
+        //Flush();
         SceneManager.LoadScene("GameOver");
     }
 

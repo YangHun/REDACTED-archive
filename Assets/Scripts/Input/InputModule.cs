@@ -12,7 +12,7 @@ public class InputModule : MonoBehaviour
 
     private Coroutine coroutine = null;
     void Start() {
-        DontDestroyOnLoad (this.gameObject);
+        //DontDestroyOnLoad (this.gameObject);
         if (this.coroutine == null) this.coroutine = StartCoroutine (OnUpdate());
     }
 
